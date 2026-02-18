@@ -1,4 +1,5 @@
 #include "io.h"
+#include "gdt.h"
 
 /* --- FRAMEBUFFER CONFIGURATION (Screen) --- */
 #define FB_COMMAND_PORT         0x3D4
@@ -82,17 +83,16 @@ void serial_write(char *buf, unsigned int len) {
 /* --- KERNEL MAIN --- */
 int kmain(void)
 {
-    /* 1. Escreve 'A' na tela (Verde em fundo Cinza Escuro) */
+    init_gdt();
+    
     fb_write_cell(0, 'A', FB_GREEN, FB_DARK_GREY);
-    fb_move_cursor(1); // Move o cursor para a próxima posição
+    fb_move_cursor(1);
 
-    /* 2. Configura a Porta Serial */
-    serial_configure_baud_rate(SERIAL_COM1_BASE, 1); // Divisor 1 (Max speed)
+    serial_configure_baud_rate(SERIAL_COM1_BASE, 1);
     serial_configure_line(SERIAL_COM1_BASE);
     serial_configure_fifo(SERIAL_COM1_BASE);
     serial_configure_modem(SERIAL_COM1_BASE);
 
-    /* 3. Envia um log para a serial */
     char log_msg[] = "Hello Serial World!";
     serial_write(log_msg, sizeof(log_msg));
 
