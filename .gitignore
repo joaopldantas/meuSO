@@ -3,3 +3,4 @@
 *.elf
 bochslog.txt
 iso/boot/kernel.elf
+*.out
