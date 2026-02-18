@@ -1,5 +1,6 @@
 #include "io.h"
 #include "gdt.h"
+#include "idt.h"
 
 /* --- FRAMEBUFFER CONFIGURATION (Screen) --- */
 #define FB_COMMAND_PORT         0x3D4
@@ -84,6 +85,7 @@ void serial_write(char *buf, unsigned int len) {
 int kmain(void)
 {
     init_gdt();
+    init_idt();
     
     fb_write_cell(0, 'A', FB_GREEN, FB_DARK_GREY);
     fb_move_cursor(1);
