@@ -1,7 +1,12 @@
-OBJECTS = loader.o kmain.o io.o io_func.o gdt.o gdt_asm.o idt.o interrupts.o interrupts_asm.o
+OBJECTS = loader.o kmain.o \
+          io/io.o io/io_func.o \
+          gdt/gdt.o gdt/gdt_asm.o \
+          idt/idt.o \
+          interrupts/interrupts.o interrupts/interrupts_asm.o
 CC = gcc
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
-         -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
+         -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c \
+         -I. -Iio -Igdt -Iidt -Iinterrupts
 LDFLAGS = -T link.ld -melf_i386
 AS = nasm
 ASFLAGS = -f elf
@@ -34,4 +39,5 @@ run: os.iso
 		$(AS) $(ASFLAGS) $< -o $@
 
 clean:
-		rm -rf *.o kernel.elf os.iso
+	rm -rf *.o kernel.elf os.iso
+	rm -rf io/*.o gdt/*.o idt/*.o interrupts/*.o
