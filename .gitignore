@@ -1,6 +1,21 @@
+# ==========================================
+# Arquivos Compilados e Binários
+# ==========================================
 *.o
-*.iso
 *.elf
-bochslog.txt
+*.iso
 iso/boot/kernel.elf
+
+# ==========================================
+# Logs e Arquivos do Emulador (Bochs / Serial)
+# ==========================================
+bochslog.txt
 *.out
+bx_enh_dbg.ini
+snapshot.txt
+
+# ==========================================
+# Configurações Pessoais de Editores (IDE)
+# ==========================================
+.vscode/
+.idea/
