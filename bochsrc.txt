@@ -9,8 +9,10 @@ megs:            32
 # 'gui_debug' abre o painel avançado de debug ao lado da tela do SO.
 display_library: sdl2
 
-# O Homebrew já define automaticamente o diretório BXSHARE com as BIOS.
-# Mantemos sem caminho fixo para funcionar em Apple Silicon e Intel.
+# Aponta para os arquivos de BIOS do emulador. 
+# No macOS com Homebrew, estes arquivos ficam em /opt/homebrew/share/bochs/
+romimage:        file=/opt/homebrew/Cellar/bochs/3.0/share/bochs/BIOS-bochs-legacy
+vgaromimage:     file=/opt/homebrew/Cellar/bochs/3.0/share/bochs/VGABIOS-lgpl-latest.bin
 
 # ======================================================================
 # CONFIGURAÇÃO DE DISCO E BOOT
