@@ -60,3 +60,8 @@ Normalmente fica em:
 - Output: Implementação de drivers para Framebuffer (saída de vídeo VGA) e Porta Serial (COM1 para logs).
 - GDT (Global Descriptor Table): Configuração da segmentação de memória para permitir o acesso aos 4GB de endereçamento em modo protegido.
 - IDT & Interrupções: Criação da Interrupt Descriptor Table e configuração do PIC para capturar eventos de hardware, como o Driver de Teclado.
+
+## Entrega parcial (11/03) - CAP: 07
+- Módulos GRUB: Carregamento de programa externo via `module /modules/program` no `menu.lst`, com empacotamento do binário em `iso/modules`.
+- Multiboot & kmain: Atualização do cabeçalho Multiboot (alinhamento de módulos) e repasse do registrador `ebx` para leitura de `mods_addr` e `mods_count`.
+- Execução de Programa: Compilação do programa externo em binário flat (`nasm -f bin`) e salto para seu endereço a partir do kernel em C.
