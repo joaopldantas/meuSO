@@ -12,7 +12,7 @@ OBJECTS = loader.o kernel/kmain.o kernel/klog.o \
           interrupts/pic.o
 
 # Compilador C (GCC) e suas flags
-CC = gcc
+CC = i686-elf-gcc
 # Flags do C: 
 # -m32: Força compilação em 32-bits (o kernel x86 precisa disso).
 # -nostdlib, -nostdinc, etc: Desliga a biblioteca padrão do C (não temos SO por baixo de nós para usar printf padrão, malloc, etc).
@@ -25,11 +25,15 @@ CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
 # Linker (LD) e suas flags
 # -T link.ld: Usa o nosso script customizado para organizar a memória.
 # -melf_i386: Formato executável ELF 32-bits.
+LD = i686-elf-ld
 LDFLAGS = -T link.ld -melf_i386
 
 # Montador Assembly (NASM) e suas flags (Formato ELF)
 AS = nasm
 ASFLAGS = -f elf
+
+# Ferramenta para gerar ISO bootável (Linux: genisoimage, macOS: xorriso -as mkisofs)
+MKISOFS ?= xorriso -as mkisofs
 
 # ======================================================================
 # 2. REGRAS DE COMPILAÇÃO E LINKAGEM
@@ -42,7 +46,7 @@ all: kernel.elf
 # Ele depende de todos os arquivos listados em $(OBJECTS).
 # O comando 'ld' junta todos os pedacinhos .o em um arquivo só.
 kernel.elf: $(OBJECTS)
-	ld $(LDFLAGS) $(OBJECTS) -o kernel.elf
+	$(LD) $(LDFLAGS) $(OBJECTS) -o kernel.elf
 
 # Como montar a imagem do CD (os.iso):
 # Ele depende do kernel.elf estar pronto. 
@@ -51,7 +55,7 @@ kernel.elf: $(OBJECTS)
 # O ISO agora também depende do programa externo (módulo GRUB do Cap. 7)
 os.iso: kernel.elf iso/modules/program
 	cp kernel.elf iso/boot/kernel.elf
-	genisoimage -R \
+	$(MKISOFS) -R \
 	-b boot/grub/stage2_eltorito \
 	-no-emul-boot \
 	-boot-load-size 4 \
@@ -66,6 +70,11 @@ os.iso: kernel.elf iso/modules/program
 # Depende da os.iso estar criada. Executa o Bochs com nosso arquivo de configuração.
 run: os.iso
 	bochs -f bochsrc.txt -q
+
+# Como rodar em modo debug interativo do Bochs (com comandos como c, r, s):
+# Também depende da os.iso para evitar erro de "No bootable device".
+debug: os.iso
+	bochs -f bochsrc.txt -q -debugger
 
 # ======================================================================
 # 3. REGRAS MÁGICAS (PATTERN RULES)
@@ -95,4 +104,4 @@ iso/modules/program: userprog/program.asm
 	$(AS) -f bin $< -o $@
 
 # Avisa ao Make que essas palavras não são arquivos reais que ele deve procurar
-.PHONY: all run clean
+.PHONY: all run debug clean

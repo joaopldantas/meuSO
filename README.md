@@ -15,10 +15,42 @@ O projeto utiliza `Make` para automatizar a compilação e execução.
 Deve ter instalado: `build-essential` / `nasm` / `genisoimage` / `bochs` e `bochs-x`
 Para compilar todo o projeto, gerar a ISO e abrir o emulador automaticamente, rode:
 
-```
 ```bash
 make run
 ```
+
+## macOS (sem WSL)
+
+No macOS, use Homebrew e a toolchain cross `i686-elf`:
+
+```bash
+brew update
+brew install nasm bochs xorriso i686-elf-binutils i686-elf-gcc
+```
+
+Depois, compile e rode:
+
+```bash
+make clean
+make run
+```
+
+Para abrir no debugger do Bochs (comandos `c`, `r`, `s` no terminal):
+
+```bash
+make debug
+```
+
+Se o Bochs reclamar de `romimage`/`vgaromimage`, ajuste no `bochsrc.txt` para o caminho do Homebrew:
+
+```bash
+brew --prefix bochs
+```
+
+Normalmente fica em:
+
+- Apple Silicon: `/opt/homebrew/share/bochs`
+- Intel: `/usr/local/share/bochs`
 
 ## Entrega parcial (11/02) - CAP: 02, 03
 - Booting: Configuração do cabeçalho Multiboot e inicialização do Kernel via GRUB.
