@@ -12,17 +12,18 @@ OBJECTS = loader.o kernel/kmain.o kernel/klog.o \
           mm/pmm.o mm/vmm.o mm/kheap.o
 
 # Compilador C (GCC) e suas flags
-CC = gcc
-CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
+CC = i686-elf-gcc
+CFLAGS = -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
          -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c \
          -I. -Iio -Igdt -Iidt -Iinterrupts -Idrivers -Ikernel -Imm
 
 # Linker (LD) e suas flags
-LDFLAGS = -T link.ld -melf_i386
+LD = i686-elf-ld
+LDFLAGS = -T link.ld
 
 # Montador Assembly (NASM) e suas flags (Formato ELF)
 AS = nasm
-ASFLAGS = -f elf
+ASFLAGS = -f elf32
 
 # ======================================================================
 # 2. REGRAS DE COMPILAÇÃO E LINKAGEM
@@ -33,12 +34,12 @@ all: kernel.elf
 
 # Como montar o executável final (kernel.elf):
 kernel.elf: $(OBJECTS)
-	ld $(LDFLAGS) $(OBJECTS) -o kernel.elf
+	$(LD) $(LDFLAGS) $(OBJECTS) -o kernel.elf
 
 # Como montar a imagem do CD (os.iso):
 os.iso: kernel.elf iso/modules/program
 	cp kernel.elf iso/boot/kernel.elf
-	genisoimage -R \
+	xorriso -as mkisofs -R \
 	-b boot/grub/stage2_eltorito \
 	-no-emul-boot \
 	-boot-load-size 4 \
@@ -76,4 +77,4 @@ iso/modules/program: userprog/program.asm
 	mkdir -p iso/modules
 	$(AS) -f bin $< -o $@
 
-.PHONY: all run clean
+.PHONY: all run clean`

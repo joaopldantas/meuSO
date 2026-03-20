@@ -5,8 +5,12 @@
 megs:            32
 
 # Define como o emulador vai exibir a tela.
+<<<<<<< HEAD
 # 'sdl2' funciona no macOS/Homebrew sem X11.
 # 'gui_debug' abre o painel avançado de debug ao lado da tela do SO.
+=======
+# 'sdl2' é recomendado para macOS.
+>>>>>>> 10de9b9 (feat: correções para compilação e execução no macOS)
 display_library: sdl2
 
 # Aponta para os arquivos de BIOS do emulador. 
