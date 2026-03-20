@@ -5,18 +5,13 @@
 megs:            32
 
 # Define como o emulador vai exibir a tela.
-<<<<<<< HEAD
-# 'sdl2' funciona no macOS/Homebrew sem X11.
-# 'gui_debug' abre o painel avançado de debug ao lado da tela do SO.
-=======
 # 'sdl2' é recomendado para macOS.
->>>>>>> 10de9b9 (feat: correções para compilação e execução no macOS)
 display_library: sdl2
 
 # Aponta para os arquivos de BIOS do emulador. 
-# No macOS com Homebrew, estes arquivos ficam em /opt/homebrew/share/bochs/
-romimage:        file=/opt/homebrew/Cellar/bochs/3.0/share/bochs/BIOS-bochs-legacy
-vgaromimage:     file=/opt/homebrew/Cellar/bochs/3.0/share/bochs/VGABIOS-lgpl-latest.bin
+# No macOS com Homebrew, usamos o caminho genérico para evitar quebras em atualizações.
+romimage:        file=/opt/homebrew/share/bochs/BIOS-bochs-legacy
+vgaromimage:     file=/opt/homebrew/share/bochs/VGABIOS-lgpl-latest.bin
 
 # ======================================================================
 # CONFIGURAÇÃO DE DISCO E BOOT
@@ -53,10 +48,6 @@ debug: action=ignore
 # Ativa a porta COM1 e redireciona tudo o que o seu SO enviar para ela 
 # direto para um arquivo chamado 'com1.out' no seu Linux real.
 com1: enabled=1, mode=file, dev=com1.out
-
-# (Aviso: A linha de log abaixo está duplicada no seu código original, 
-# você pode apagar esta linha se quiser, pois já definimos lá em cima).
-# log:             bochslog.txt
 
 # ======================================================================
 # PROCESSADOR E TEMPO
