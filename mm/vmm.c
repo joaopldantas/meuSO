@@ -29,22 +29,21 @@ void vmm_init() {
  * Como mapeamos a kernel_page_table em 0xC0000000, e ela tem 1024 entradas,
  * a última entrada (1023) corresponde ao endereço virtual 0xC03FF000.
  */
-#define TEMP_MAP_ADDR 0xC03FF000
+#define TEMP_MAP_ADDR 0xC03FF000 // Última página da kernel_page_table predefinida para mapeamentos temporários
 
 void vmm_map(unsigned int virtual_addr, unsigned int physical_addr, unsigned int flags) {
     unsigned int pd_idx = virtual_addr >> 22;
     unsigned int pt_idx = (virtual_addr >> 12) & 0x3FF;
 
-    if (!(page_directory[pd_idx] & PAGE_PRESENT)) {
-        // Precisamos criar uma nova tabela de páginas
-        unsigned int pt_phys = pmm_alloc_frame();
+    if (!(page_directory[pd_idx] & PAGE_PRESENT)) { // se a tabela de páginas não existe, criamos uma nova
+        unsigned int pt_phys = pmm_alloc_frame(); // pega a ram física livre para a nova PT
         
         // Mapeia temporariamente para zerar a nova PT
         kernel_page_table[1023] = pt_phys | PAGE_PRESENT | PAGE_RW;
-        __asm__ volatile("invlpg (%0)" : : "r"(TEMP_MAP_ADDR));
+        __asm__ volatile("invlpg (%0)" : : "r"(TEMP_MAP_ADDR)); // usa o mapeamento temporário para acessar a nova PT
         
         unsigned int *pt_virt = (unsigned int *)TEMP_MAP_ADDR;
-        for (int i = 0; i < 1024; i++) pt_virt[i] = 0;
+        for (int i = 0; i < 1024; i++) pt_virt[i] = 0; // zera a nova PT
         
         page_directory[pd_idx] = pt_phys | PAGE_PRESENT | PAGE_RW | flags;
     }
